@@ -1,6 +1,6 @@
 {
     "name": "softcommerce/rebound",
-    "description": "",
+    "description": "Magento - ReBOUND Connector",
     "require": {
         "php": "~7.3.0|~7.4.0",
         "softcommerce/core": "1.0.0",
