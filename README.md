@@ -1,7 +1,7 @@
 # Magento - ReBOUND Connector
 Magento :: ReBOUND :: Synchronisation
 
-A plugin that integrates and synchronises data between Magento2 and MintSoft https://www.reboundreturns.com/
+A plugin that integrates and synchronises data between Magento2 and ReBOUND https://www.reboundreturns.com/
 
 ## Available integrations:
 - Order export from Magento to ReBOUND.
@@ -26,7 +26,7 @@ Run the following command from Magento root directory:
 
 ```
 composer config repositories.softcommerce-rebound vcs https://github.com/softcommerceltd/rebound.git
-composer require softcommerce/mintsoft
+composer require softcommerce/rebound
 ```
 If you receive an error regarding php incompatibility, but you are sure your php version is compatible, then use --ignore-platform-reqs
 ```
