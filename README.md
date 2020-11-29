@@ -18,7 +18,7 @@ A plugin that integrates and synchronises data between Magento2 and ReBOUND http
 * Login to your magento server and move to magento's app/code directory
 `cd app/code && mkdir SoftCommerce && cd SoftCommerce && mkdir Rebound` to create new directory app/code/SoftCommerce/Rebound
 * Upload contents to app/code/SoftCommerce/Rebound directory.
-* Move back to your magento root directory and execute the following commands
+* Move back to your magento root directory and execute "Post Install" commands described bellow.
 
 ### Install via composer
 
