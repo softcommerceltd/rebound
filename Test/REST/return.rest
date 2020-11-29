@@ -1,0 +1,83 @@
+###
+POST https://intelligentreturns.net/api/returns/create/json
+Content-Type: application/x-www-form-urlencoded
+
+login=Willsveganstoretestaccount&api_key=16b391607debd26ec0548eccb6b859d1&request=%7B%22return%22%3A%7B%22order_reference%22%3A%22100101230%22%2C%22order_date%22%3A%2210%5C%2F20%5C%2F2015%22%2C%22rma%22%3A%2288396445379%22%2C%22name%22%3A%22Serhiy+Wholesale+group+A%22%2C%22addr1%22%3A%22100+New+Bond+Street%22%2C%22addr2%22%3A%22100+New+Bond+Street%22%2C%22addr3%22%3A%22%22%2C%22zip%22%3A%22W1S+1SP%22%2C%22state%22%3A%22%22%2C%22country%22%3A%22GB%22%2C%22phone%22%3A%22%2B102030405060%22%2C%22email%22%3A%22serhiy%40softcommerce.co.uk%22%2C%22display_id%22%3A%22123123123%22%2C%22carrier%22%3A%22acp%22%2C%22service%22%3A%22ground%22%2C%22item%22%3A%5B%7B%22sku_code%22%3A%2219-01-06-07-02%22%2C%22sku_desc%22%3A%22Waffle+Cardigan%22%2C%22quantity%22%3A%221%22%2C%22price%22%3A%2274%22%2C%22weight%22%3A%220.42%22%2C%22length%22%3A%222%22%2C%22width%22%3A%223%22%2C%22height%22%3A%224%22%2C%22export_carrier_name%22%3A%22USPS%22%2C%22country_code%22%3A%22GB%22%2C%22img_path%22%3A%22%22%7D%5D%7D%7D
+
+###
+POST https://intelligentreturns.net/api/orders/create/json
+Content-Type: application/x-www-form-urlencoded
+
+login=Willsveganstoretestaccount&api_key=16b391607debd26ec0548eccb6b859d1&request=%7B%22return%22%3A%7B%22order_reference%22%3A%22100101230%22%2C%22order_date%22%3A%2210%5C%2F20%5C%2F2015%22%2C%22rma%22%3A%2288396445379%22%2C%22name%22%3A%22Serhiy+Wholesale+group+A%22%2C%22company_name%22%3A%22%22%2C%22addr1%22%3A%22100+New+Bond+Street%22%2C%22addr2%22%3A%22100+New+Bond+Street%22%2C%22addr3%22%3A%22%22%2C%22city%22%3A%22London%22%2C%22zip%22%3A%22W1S+1SP%22%2C%22state%22%3A%22%22%2C%22country%22%3A%22GB%22%2C%22phone%22%3A%22%2B102030405060%22%2C%22email%22%3A%22serhiy%40softcommerce.co.uk%22%2C%22display_id%22%3A%22123123123%22%2C%22carrier%22%3A%22acp%22%2C%22service%22%3A%22ground%22%2C%22item%22%3A%5B%7B%22sku_code%22%3A%2219-01-06-07-02%22%2C%22sku_desc%22%3A%22Waffle+Cardigan%22%2C%22quantity%22%3A%221%22%2C%22price%22%3A%2274%22%2C%22weight%22%3A%220.42%22%2C%22length%22%3A%222%22%2C%22width%22%3A%223%22%2C%22height%22%3A%224%22%2C%22export_carrier_name%22%3A%22USPS%22%2C%22country_code%22%3A%22GB%22%2C%22img_path%22%3A%22%22%7D%5D%7D%7D
+
+###
+POST https://intelligentreturns.net/api/orders/create/json
+Content-Type: application/x-www-form-urlencoded
+{
+    "return":
+    {
+        "order_reference":"12312355",
+        "name":"John Doe",
+        "phone":"+010557779",
+        "email":"doe@gmail.com",
+        "addr1":"City Hall",
+        "addr2":"24 Eagle Street, Room 102",
+        "addr3":"",
+        "city":"Albany",
+        "zip":"12207",
+        "state":"NY",
+        "country":"US",
+        "display_id":"123123123",
+        "final_dest_id": "Default",
+        "final_dest_addr1":"Telford Transport Solutions Ltd",
+        "final_dest_addr2":"Stafford Park 12",
+        "final_dest_addr3":"",
+        "final_dest_city":"Telford",
+        "final_dest_zip":"TF3 3BJ",
+        "final_dest_state":"West Midlands",
+        "final_dest_country":"UK",
+        "carrier":"acp",
+        "service":"ground",
+        "item":[
+            {
+                "sku_code":"ASD111",
+                "sku_desc":"Black Sculpting & Smoothing Shapewear Body Suit-EUR 38 (M)",
+                "quantity":"5",
+                "price":"100",
+                "weight":"0.3",
+                "length":"10",
+                "width":"10",
+                "height":"10",
+                "dimensions_uom":"mm",
+                "hs_code":"5905954",
+                "country_code":"CN",
+                "img_path":"https://intelligentreturns.net/assets/frontend/img/rebound_logo.png",
+                "dangerous_goods":"Yes",
+                "export_date": "946677600",
+                "export_awb": "32153454GB",
+                "export_carrier_name": "USPS"
+            },{
+                "sku_code":"UN-12322;28",
+                "sku_desc":"Black Halterneck > Corset",
+                "quantity":"10",
+                "price":"200",
+                "weight":"0.86",
+                "length":"10",
+                "width":"10",
+                "height":"10",
+                "dimensions_uom":"mm",
+                "hs_code":"4331767",
+                "country_code":"GB",
+                "img_path":"https://intelligentreturns.net/assets/frontend/img/rebound_logo.png",
+                "dangerous_goods":"No",
+                "export_date": "946677600",
+                "export_awb": "32153454GB",
+                "export_carrier_name": "USPS"
+            }
+        ]
+    }
+}
+
+
+###
+

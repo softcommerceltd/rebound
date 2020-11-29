@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<!--
+ ~ Copyright © Soft Commerce Ltd. All rights reserved.
+ ~ See LICENSE.txt for license details.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="softcommerce_rebound" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+            <class>separator-top</class>
+            <label>Rebound</label>
+            <tab>softcommerce_tab</tab>
+            <resource>SoftCommerce_Rebound::configuration</resource>
+            <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="version" type="note" translate="label" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Version</label>
+                    <frontend_model>SoftCommerce\MintSoft\Block\Adminhtml\System\Config\Form\Field\Version</frontend_model>
+                    <comment>Current module version</comment>
+                </field>
+                <field id="license" translate="label comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="0">
+                    <label>License</label>
+                    <comment>This is provided with your invoice.</comment>
+                </field>
+            </group>
+            <group id="client" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Client General Configuration</label>
+                <field id="api_name" translate="label" type="text" sortOrder="1" showInDefault="1">
+                    <label>API Name</label>
+                </field>
+                <field id="api_url" translate="label" type="text" sortOrder="2" showInDefault="1">
+                    <label>API URL</label>
+                </field>
+                <field id="api_retry" translate="label" type="text" sortOrder="3" showInDefault="1">
+                    <label>Number of tries in case of error</label>
+                </field>
+                <field id="api_connection_timeout" translate="label" type="text" sortOrder="4" showInDefault="1">
+                    <label>Connection time out</label>
+                </field>
+                <field id="api_timeout" translate="label" type="text" sortOrder="5" showInDefault="1">
+                    <label>Request time out</label>
+                </field>
+            </group>
+            <group id="order_export_returns" translate="label" type="text" sortOrder="3" showInDefault="1">
+                <label>Order Export [Returns]</label>
+                <field id="is_active" translate="label comment" type="select" sortOrder="0" showInDefault="1">
+                    <label>Enable Order Export</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables export of orders to Rebound.</comment>
+                </field>
+                <field id="is_sandbox" translate="label comment" type="select" sortOrder="1" showInDefault="1" >
+                    <label>Enable Sandbox</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables sandbox mode for testing.</comment>
+                    <depends>
+                        <field id="is_active">1</field>
+                    </depends>
+                </field>
+                <field id="api_username" translate="label" type="text" sortOrder="2" showInDefault="1">
+                    <label>API Username</label>
+                    <depends>
+                        <field id="is_active">1</field>
+                        <field id="is_sandbox">0</field>
+                    </depends>
+                </field>
+                <field id="api_username_sandbox" translate="label" type="text" sortOrder="2" showInDefault="1">
+                    <label>API Username [sandbox]</label>
+                    <depends>
+                        <field id="is_active">1</field>
+                        <field id="is_sandbox">1</field>
+                    </depends>
+                </field>
+                <field id="api_access_token" translate="label" type="obscure" sortOrder="3" showInDefault="1">
+                    <label>API Access Token</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="is_active">1</field>
+                        <field id="is_sandbox">0</field>
+                    </depends>
+                </field>
+                <field id="api_access_token_sandbox" translate="label" type="obscure" sortOrder="3" showInDefault="1">
+                    <label>API Access Token [sandbox]</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="is_active">1</field>
+                        <field id="is_sandbox">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="order_export_recycling" translate="label" type="text" sortOrder="4" showInDefault="1">
+                <label>Order Export [Recycling]</label>
+                <field id="is_active" translate="label comment" type="select" sortOrder="0" showInDefault="1">
+                    <label>Enable Order Export</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables export of orders to Rebound.</comment>
+                </field>
+                <field id="is_sandbox" translate="label comment" type="select" sortOrder="1" showInDefault="1" >
+                    <label>Enable Sandbox</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables sandbox mode for testing.</comment>
+                    <depends>
+                        <field id="is_active">1</field>
+                    </depends>
+                </field>
+                <field id="api_username" translate="label" type="text" sortOrder="2" showInDefault="1">
+                    <label>API Username</label>
+                    <depends>
+                        <field id="is_active">1</field>
+                        <field id="is_sandbox">0</field>
+                    </depends>
+                </field>
+                <field id="api_username_sandbox" translate="label" type="text" sortOrder="2" showInDefault="1">
+                    <label>API Username [sandbox]</label>
+                    <depends>
+                        <field id="is_active">1</field>
+                        <field id="is_sandbox">1</field>
+                    </depends>
+                </field>
+                <field id="api_access_token" translate="label" type="obscure" sortOrder="3" showInDefault="1">
+                    <label>API Access Token</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="is_active">1</field>
+                        <field id="is_sandbox">0</field>
+                    </depends>
+                </field>
+                <field id="api_access_token_sandbox" translate="label" type="obscure" sortOrder="3" showInDefault="1">
+                    <label>API Access Token [sandbox]</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="is_active">1</field>
+                        <field id="is_sandbox">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="dev" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Enable Debugging</label>
+                <field id="is_active_debug" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable debugging</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables logging request / response data to a file.</comment>
+                </field>
+                <field id="debug_print_to_array" translate="label comment" type="select" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Print data to array</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables logging request / response data as array. This improves human readability but increases size of the file.</comment>
+                    <depends>
+                        <field id="is_active_debug">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

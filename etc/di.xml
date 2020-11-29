@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+ ~ Copyright © Soft Commerce Ltd. All rights reserved.
+ ~ See LICENSE.txt for license details.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- order export ::: interface | repository | management -->
+    <preference for="SoftCommerce\Rebound\Api\Data\OrderExportInterface" type="SoftCommerce\Rebound\Model\OrderExport"/>
+    <preference for="SoftCommerce\Rebound\Api\OrderExportRepositoryInterface" type="SoftCommerce\Rebound\Model\OrderExportRepository"/>
+    <preference for="SoftCommerce\Rebound\Api\Data\OrderExportSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="SoftCommerce\Rebound\Http\ClientInterface" type="SoftCommerce\Rebound\Http\Client"/>
+    <preference for="SoftCommerce\Rebound\Service\OrderExportInterface" type="SoftCommerce\Rebound\Service\OrderExport"/>
+    <type name="SoftCommerce\Rebound\Service\OrderExport">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="generator" xsi:type="object">SoftCommerce\Rebound\Service\OrderExport\Generator</item>
+                <item name="processor" xsi:type="object">SoftCommerce\Rebound\Service\OrderExport\Processor</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="SoftCommerce\Rebound\Service\OrderExport\Processor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="returns" xsi:type="object">SoftCommerce\Rebound\Service\OrderExport\Processor\Returns</item>
+                <item name="recycling" xsi:type="object">SoftCommerce\Rebound\Service\OrderExport\Processor\Recycling</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- config -->
+    <preference for="SoftCommerce\Rebound\Model\ConfigInterface" type="SoftCommerce\Rebound\Model\Config"/>
+    <!-- CLI -->
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="export_order" xsi:type="object">SoftCommerce\Rebound\Console\Command\ExportOrder</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Logger -->
+    <virtualType name="SoftCommerceReboundVirtualLogger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="debug" xsi:type="object">SoftCommerce\Rebound\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="SoftCommerce\Rebound\Logger\Logger">
+        <arguments>
+            <argument name="logger" xsi:type="object">SoftCommerceReboundVirtualLogger</argument>
+        </arguments>
+    </type>
+</config>

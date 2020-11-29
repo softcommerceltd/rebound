@@ -1,0 +1,104 @@
+### -- Order GET by ID
+POST https://intelligentreturns.net/api/orders/get/json
+Content-Type: application/x-www-form-urlencoded
+
+login=willsveganstorerecycletestaccount&api_key=d24fd0a3dd9ca9ea68b1b52eb5780392&request=%7B%22order%22%3A%7B%22type%22%3A%22reference%22%2C%22val%22%3A%22EmailTest%22%7D%7D
+
+### -- Order GET by reference ID
+POST https://intelligentreturns.net/api/orders/get/json
+Content-Type: application/x-www-form-urlencoded
+
+login=willsveganstorerecycletestaccount&api_key=d24fd0a3dd9ca9ea68b1b52eb5780392&request=%7B%22order%22%3A%7B%22type%22%3A%22reference%22%2C%22val%22%3A%2282e4dd55%22%7D%7D
+
+### -- Order CREATE
+POST https://intelligentreturns.net/api/orders/create/json
+Content-Type: application/x-www-form-urlencoded
+
+login=willsveganstorerecycletestaccount&api_key=d24fd0a3dd9ca9ea68b1b52eb5780392&request=%7B%22order%22%3A%7B%22order_reference%22%3A%221000000000002%22%2C%22order_date%22%3A%2210%5C%2F20%5C%2F2015%22%2C%22rma%22%3A%2212345%22%2C%22contact_name%22%3A%22John+Smith%22%2C%22company_name%22%3A%22%22%2C%22addr1%22%3A%226+Semaphore+Close+Mount+Pleasant%22%2C%22addr2%22%3A%22%22%2C%22addr3%22%3A%22Christchurch%22%2C%22zip%22%3A%228081%22%2C%22state%22%3A%22qwe%22%2C%22country%22%3A%22NZ%22%2C%22phone%22%3A%22%2B102030405060%22%2C%22email%22%3A%22john.smith%40googlemail.com%22%2C%22currency_code%22%3A%22AUD%22%2C%22export_awb%22%3A%2232153454GB%22%2C%22export_carrier_name%22%3A%22USPS%22%2C%22item%22%3A%5B%7B%22sku_code%22%3A%22QWE123%22%2C%22sku_desc%22%3A%22Black+Sculpting+%26+Smoothing+Shapewear+Body+Suit-EUR+38+%28M%29%22%2C%22quantity%22%3A%225%22%2C%22price%22%3A%22100%22%2C%22weight%22%3A%221%22%2C%22length%22%3A%222%22%2C%22width%22%3A%223%22%2C%22height%22%3A%224%22%2C%22dimensions_uom%22%3A%22mm%22%2C%22hs_code%22%3A%22%22%2C%22country_code%22%3A%22GB%22%2C%22img_path%22%3A%22%22%7D%2C%7B%22sku_code%22%3A%22QWE456%22%2C%22sku_desc%22%3A%22Black+Halterneck+Corset%22%2C%22quantity%22%3A%2210%22%2C%22price%22%3A%22200%22%2C%22weight%22%3A%220.86%22%2C%22length%22%3A%220%22%2C%22width%22%3A%220%22%2C%22height%22%3A%220%22%2C%22dimensions_uom%22%3A%22mm%22%2C%22hs_code%22%3A%22%22%2C%22country_code%22%3A%22GB%22%2C%22img_path%22%3A%22%22%7D%5D%7D%7D
+
+### -- Order CREATE
+POST https://intelligentreturns.net/api/orders/create/json
+Content-Type: application/x-www-form-urlencoded
+
+login=willsveganstorerecycletestaccount&api_key=d24fd0a3dd9ca9ea68b1b52eb5780392&request=%7B%22order%22%3A%7B%22order_reference%22%3A%221000000000002%22%2C%22order_date%22%3A%2210%5C%2F20%5C%2F2015%22%2C%22rma%22%3A%2212345%22%2C%22contact_name%22%3A%22John+Smith%22%2C%22company_name%22%3A%22%22%2C%22addr1%22%3A%226+Semaphore+Close+Mount+Pleasant%22%2C%22addr2%22%3A%22%22%2C%22addr3%22%3A%22Christchurch%22%2C%22zip%22%3A%228081%22%2C%22state%22%3A%22qwe%22%2C%22country%22%3A%22NZ%22%2C%22phone%22%3A%22%2B102030405060%22%2C%22email%22%3A%22john.smith%40googlemail.com%22%2C%22currency_code%22%3A%22AUD%22%2C%22export_awb%22%3A%2232153454GB%22%2C%22export_carrier_name%22%3A%22USPS%22%2C%22item%22%3A%5B%7B%22sku_code%22%3A%22QWE123%22%2C%22sku_desc%22%3A%22Black+Sculpting+%26+Smoothing+Shapewear+Body+Suit-EUR+38+%28M%29%22%2C%22quantity%22%3A%225%22%2C%22price%22%3A%22100%22%2C%22weight%22%3A%221%22%2C%22length%22%3A%222%22%2C%22width%22%3A%223%22%2C%22height%22%3A%224%22%2C%22dimensions_uom%22%3A%22mm%22%2C%22hs_code%22%3A%22%22%2C%22country_code%22%3A%22GB%22%2C%22img_path%22%3A%22%22%7D%2C%7B%22sku_code%22%3A%22QWE456%22%2C%22sku_desc%22%3A%22Black+Halterneck+Corset%22%2C%22quantity%22%3A%2210%22%2C%22price%22%3A%22200%22%2C%22weight%22%3A%220.86%22%2C%22length%22%3A%220%22%2C%22width%22%3A%220%22%2C%22height%22%3A%220%22%2C%22dimensions_uom%22%3A%22mm%22%2C%22hs_code%22%3A%22%22%2C%22country_code%22%3A%22GB%22%2C%22img_path%22%3A%22%22%7D%5D%7D%7D
+
+### -- Order CREATE
+POST https://intelligentreturns.net/api/orders/create/json
+Content-Type: application/x-www-form-urlencoded
+{
+    "order":
+    {
+        "order_reference":"1000000000000",
+        "order_date":"10/20/2015",
+        "rma": "12345",
+        "contact_name":"John Smith",
+        "company_name":"",
+        "addr1":"6 Semaphore Close Mount Pleasant",
+        "addr2":"",
+        "addr3":"",
+        "city":"Christchurch",
+        "zip":"8081",
+        "state":"qwe",
+        "country":"NZ",
+        "phone":"+102030405060",
+        "email":"john.smith@googlemail.com",
+        "currency_code":"AUD",
+        "export_awb":"32153454GB",
+        "export_carrier_name":"USPS",
+        "free_return":true,
+        "custom_fields": {
+            "field1": "Some additional description for this order"
+        },
+        "item":[
+            {
+                "sku_code":"QWE123",
+                "sku_desc":"Black Sculpting & Smoothing Shapewear Body Suit-EUR 38 (M)",
+                "quantity":"5",
+                "price":"100",
+                "weight":"1",
+                "length":"2",
+                "width":"3",
+                "height":"4",
+                "dimensions_uom":"mm",
+                "hs_code":"999999",
+                "country_code":"GB",
+                "img_path":"https://intelligentreturns.net/assets/frontend/img/rebound_logo.png",
+                "dangerous_goods":"Yes",
+                "export_date": "946677600",
+                "export_awb": "32153454GB",
+                "export_carrier_name": "USPS",
+                "sku_url": "http://domain.com/sku-url",
+                "tracking": "123456789",
+                "non_returnable": "true",
+                "days_for_return": 0,
+                "custom_fields": {
+                    "field1": "Some additional description for this item"
+                }
+            },
+            {
+                "sku_code":"QWE456",
+                "sku_desc":"Black Halterneck Corset",
+                "quantity":"10",
+                "price":"200",
+                "weight":"0.86",
+                "length":"10",
+                "width":"10",
+                "height":"10",
+                "dimensions_uom":"mm",
+                "hs_code":"999999",
+                "country_code":"GB",
+                "img_path":"https://intelligentreturns.net/assets/frontend/img/rebound_logo.png",
+                "dangerous_goods":"Yes",
+                "export_date": "946677600",
+                "export_awb": "32153454GB",
+                "export_carrier_name": "USPS",
+                "sku_url": "http://domain.com/sku-url",
+                "tracking": "123456780",
+                "days_for_return": 120
+            }
+        ]
+    }
+}
+
+###
+

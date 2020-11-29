@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+ * Copyright © Soft Commerce Ltd. All rights reserved.
+ * See LICENSE.txt for license details.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="SoftCommerce_Rebound::core"
+             title="Rebound"
+             translate="title"
+             module="SoftCommerce_Rebound"
+             sortOrder="30"
+             parent="SoftCommerce_Core::core"
+             resource="SoftCommerce_Rebound::core"/>
+        <add id="SoftCommerce_Rebound::configuration"
+             title="Configuration"
+             translate="title"
+             module="SoftCommerce_Rebound"
+             sortOrder="10"
+             parent="SoftCommerce_Rebound::core"
+             action="adminhtml/system_config/edit/section/softcommerce_rebound/"
+             resource="SoftCommerce_Rebound::configuration"/>
+        <add id="SoftCommerce_Rebound::order_export"
+             title="Order Export"
+             translate="title"
+             module="SoftCommerce_Rebound"
+             sortOrder="20"
+             parent="SoftCommerce_Rebound::core"
+             action="softcommerce_rebound/order/"
+             resource="SoftCommerce_Rebound::order_export"/>
+    </menu>
+</config>
