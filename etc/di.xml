@@ -8,6 +8,7 @@
     <preference for="SoftCommerce\Rebound\Api\Data\OrderExportInterface" type="SoftCommerce\Rebound\Model\OrderExport"/>
     <preference for="SoftCommerce\Rebound\Api\OrderExportRepositoryInterface" type="SoftCommerce\Rebound\Model\OrderExportRepository"/>
     <preference for="SoftCommerce\Rebound\Api\Data\OrderExportSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="SoftCommerce\Rebound\Api\OrderExportManagementInterface" type="SoftCommerce\Rebound\Model\OrderExportManagement"/>
     <preference for="SoftCommerce\Rebound\Http\ClientInterface" type="SoftCommerce\Rebound\Http\Client"/>
     <preference for="SoftCommerce\Rebound\Service\OrderExportInterface" type="SoftCommerce\Rebound\Service\OrderExport"/>
     <type name="SoftCommerce\Rebound\Service\OrderExport">

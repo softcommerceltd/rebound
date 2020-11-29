@@ -84,7 +84,7 @@ class ExportOrder extends AbstractCommand
                     self::ENTITY_FILTER,
                     '-e',
                     InputOption::VALUE_REQUIRED,
-                    'Entity Filter [returns and/or recycling comma separated]'
+                    'Entity Filter [returns and/or recycling]'
                 ),
             ]);
 

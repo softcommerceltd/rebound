@@ -92,14 +92,21 @@ class AbstractProcessor extends AbstractService
     {
         $this->executeBefore();
         if (!$this->canProcess() || !$request = $this->getContext()->getRequest()) {
-            throw new LocalizedException(
-                __(
-                    'Could not export. [Order: %1, Entity: %2. Reason: %3]',
-                    $this->getContext()->getSalesOrder()->getIncrementId(),
-                    $this->entityType,
-                    $this->getContext()->getRequest() ? 'Not allowed for export.' : 'Request data is not set.'
-                )
-            );
+            $this->getContext()
+                ->addResponse(
+                    [
+                        'order_id' => $this->getContext()->getSalesOrder()->getIncrementId(),
+                        'entity' => $this->entityType,
+                        'message' => __(
+                            'Could not export. [Order: %1, Entity: %2. Reason: %3]',
+                            $this->getContext()->getSalesOrder()->getIncrementId(),
+                            $this->entityType,
+                            $this->getContext()->getRequest() ? 'Not allowed for export.' : 'Request data is not set.'
+                        )
+                    ],
+                    Status::ERROR
+                );
+            return $this;
         }
 
         $this->client->execute(
@@ -200,9 +207,10 @@ class AbstractProcessor extends AbstractService
      */
     protected function canProcess(): bool
     {
-        return (!$this->getContext()->getSalesOrderReboundId($this->entityType)
-                && $this->getContext()->getSalesOrderReboundStatus() === Status::PENDING)
-            || in_array($this->entityType, $this->getContext()->getEntityFilter())
-            || !empty($this->getContext()->getSearchCriteria());
+        return $this->getContext()->getSalesOrder()->getShipmentsCollection()->getSize()
+                && ((!$this->getContext()->getSalesOrderReboundId($this->entityType)
+                    && $this->getContext()->getSalesOrderReboundStatus() === Status::PENDING)
+                || in_array($this->entityType, $this->getContext()->getEntityFilter())
+                || !empty($this->getContext()->getSearchCriteria()));
     }
 }

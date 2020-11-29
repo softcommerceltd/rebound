@@ -169,7 +169,7 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
             if (!$this->canProcess($order)) {
                 continue;
             }
-
+            
             try {
                 $this->process($order);
             } catch (\Exception $e) {

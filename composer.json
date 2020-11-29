@@ -1,9 +1,9 @@
 {
-    "name": "softcommerce/module-rebound",
-    "description": "SoftCommerce Core - Global functionalities for bundle modules.",
+    "name": "softcommerce/rebound",
+    "description": "",
     "require": {
         "php": "~7.3.0|~7.4.0",
-        "softcommerce/module-core": "*",
+        "softcommerce/core": "1.0.0",
         "magento/module-sales": "103.0.*",
         "magento/magento-composer-installer": "*"
     },
