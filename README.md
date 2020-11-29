@@ -26,11 +26,11 @@ Run the following command from Magento root directory:
 
 ```
 composer config repositories.softcommerce-rebound vcs https://github.com/softcommerceltd/rebound.git
-composer require softcommerce/rebound
+composer require softcommerce/module-rebound
 ```
 If you receive an error regarding php incompatibility, but you are sure your php version is compatible, then use --ignore-platform-reqs
 ```
-composer require softcommerce/rebound --ignore-platform-reqs
+composer require softcommerce/module-rebound --ignore-platform-reqs
 ```
 
 ### Post Installation
