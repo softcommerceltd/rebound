@@ -23,13 +23,5 @@
         "psr-4": {
             "SoftCommerce\\Rebound\\": ""
         }
-    },
-    "extra": {
-        "map": [
-            [
-                "*",
-                "SoftCommerce/Rebound"
-            ]
-        ]
     }
 }
