@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.0.3
+- **Fix**: Changes to composer.json
+
 ### Version 1.0.2
 - **Feature**: Added `commodity` and `track no` fields to order export.
 - **Feature**: Added recycling entity to order export. 

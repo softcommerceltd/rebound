@@ -11,7 +11,6 @@
 
     },
     "type": "magento2-module",
-    "version": "1.0.2",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
@@ -23,5 +22,6 @@
         "psr-4": {
             "SoftCommerce\\Rebound\\": ""
         }
-    }
+    },
+    "version": "1.0.3"
 }
