@@ -3,6 +3,8 @@
  * Copyright © Soft Commerce Ltd, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
+declare(strict_types=1);
 namespace SoftCommerce\Rebound\Service\OrderExport;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
@@ -52,6 +54,11 @@ class AbstractService
     protected ?SearchCriteriaInterface $searchCriteria = null;
 
     /**
+     * @var string|null
+     */
+    protected ?string $behaviour = null;
+
+    /**
      * @var array
      */
     protected array $error = [];
@@ -84,7 +91,7 @@ class AbstractService
     /**
      * @var array|null
      */
-    private ?array $salesOrderReboundId = null;
+    protected array $salesOrderReboundId = [];
 
     /**
      * @var int|null
@@ -206,6 +213,24 @@ class AbstractService
     }
 
     /**
+     * @return string|null
+     */
+    public function getBehaviour(): ?string
+    {
+        return $this->behaviour;
+    }
+
+    /**
+     * @param string $behaviour
+     * @return $this
+     */
+    public function setBehaviour(string $behaviour)
+    {
+        $this->behaviour = $behaviour;
+        return $this;
+    }
+
+    /**
      * @return SearchCriteriaInterface
      */
     public function getSearchCriteria()
@@ -283,14 +308,14 @@ class AbstractService
 
     /**
      * @param string $entityType
-     * @return int|null
+     * @return int|string|null
      * @throws LocalizedException
      */
-    public function getSalesOrderReboundId(string $entityType): ?int
+    public function getSalesOrderReboundId(string $entityType)
     {
         $salesOrder = $this->getSalesOrder();
-        if (isset($this->salesOrderReboundId[$salesOrder->getId()][$entityType])) {
-            return $this->salesOrderReboundId[$salesOrder->getId()][$entityType];
+        if (isset($this->salesOrderReboundId[$entityType])) {
+            return $this->salesOrderReboundId[$entityType];
         }
 
         if (!$clientId = $salesOrder->getData(Api\Data\OrderExportInterface::REBOUND_ORDER)) {
@@ -299,27 +324,26 @@ class AbstractService
 
         try {
             $clientId = $this->serializer->unserialize($clientId);
-            $this->salesOrderReboundId[$salesOrder->getId()] = $clientId;
+            $this->salesOrderReboundId = (array) $clientId;
         } catch (\InvalidArgumentException $e) {
             return null;
         }
 
-        return $this->salesOrderReboundId[$salesOrder->getId()][$entityType] ?? null;
+        return $this->salesOrderReboundId[$entityType] ?? null;
     }
 
     /**
      * @param string|null $entityType
      * @param string|null $metadata
      * @return array|mixed|null
-     * @throws LocalizedException
      */
     public function getClientOrder(?string $entityType = null, ?string $metadata = null)
     {
         return null !== $entityType
             ? (null === $metadata
-                ? ($this->clientOrder[$this->getSalesOrder()->getId()][$entityType] ?? [])
-                : ($this->clientOrder[$this->getSalesOrder()->getId()][$entityType][$metadata] ?? null))
-            : $this->clientOrder[$this->getSalesOrder()->getId()] ?? [];
+                ? ($this->clientOrder[$entityType] ?? [])
+                : ($this->clientOrder[$entityType][$metadata] ?? null))
+            : ($this->clientOrder ?: []);
     }
 
     /**
@@ -332,15 +356,13 @@ class AbstractService
     {
         if (!$clientOrder = $this->getClientOrder($entityType)) {
             $clientOrder = [
-                Api\Data\OrderExportInterface::ENTITY_ID => $this->getSalesOrder()->getId(),
                 Api\Data\OrderExportInterface::ENTITY_TYPE => $entityType,
+                Api\Data\OrderExportInterface::ORDER_ID => $this->getSalesOrder()->getId(),
                 Api\Data\OrderExportInterface::INCREMENT_ID => $this->getSalesOrder()->getIncrementId(),
                 Api\Data\OrderExportInterface::EXTERNAL_ID => null,
+                Api\Data\OrderExportInterface::REFERENCE_ID => $this->getSalesOrder()->getIncrementId(),
                 Api\Data\OrderExportInterface::STATUS => Status::PROCESSING,
                 Api\Data\OrderExportInterface::MESSAGE => 'Order being exported.',
-                Api\Data\OrderExportInterface::REQUEST_ENTRY => $this->getRequest()
-                    ? $this->serializer->serialize($this->getRequest())
-                    : null,
                 Api\Data\OrderExportInterface::RESPONSE_ENTRY => null,
                 Api\Data\OrderExportInterface::CREATED_AT => $this->dateTime->gmtDate(),
                 Api\Data\OrderExportInterface::UPDATED_AT => $this->dateTime->gmtDate()
@@ -348,7 +370,7 @@ class AbstractService
         }
 
         $clientOrder = array_merge($clientOrder, $data);
-        $this->clientOrder[$this->getSalesOrder()->getId()][$entityType] = $clientOrder;
+        $this->clientOrder[$entityType] = $clientOrder;
 
         return $this;
     }

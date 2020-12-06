@@ -5,21 +5,24 @@
 -->
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
-    <table name="softcommerce_rebound_order_export" resource="default" engine="innodb">
-        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="false"
+    <table name="softcommerce_rebound_order_export" resource="default" engine="innodb" disabled="true"/>
+    <table name="softcommerce_rebound_order_entity" resource="default" engine="innodb">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true"
                 comment="Entity ID"/>
         <column xsi:type="varchar" name="entity_type" nullable="false" length="16"
                 comment="Entity Type"/>
-        <column xsi:type="int" name="increment_id" padding="10" unsigned="true" nullable="true" identity="false"
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" identity="false"
+                comment="Order ID"/>
+        <column xsi:type="varchar" name="increment_id" nullable="true" length="32"
                 comment="Increment ID"/>
-        <column xsi:type="int" name="external_id" padding="10" unsigned="true" nullable="true" identity="false"
+        <column xsi:type="int" name="external_id" unsigned="true" nullable="true" identity="false"
                 comment="External ID"/>
+        <column xsi:type="varchar" name="reference_id" nullable="true" length="32"
+                comment="Reference ID"/>
         <column xsi:type="varchar" name="status" nullable="true" length="16"
                 comment="Status"/>
         <column xsi:type="text" name="message" nullable="true"
                 comment="Message"/>
-        <column xsi:type="longtext" name="request_entry" nullable="true"
-                comment="Request"/>
         <column xsi:type="longtext" name="response_entry" nullable="true"
                 comment="Response"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
@@ -28,15 +31,24 @@
                 comment="Updated At"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
-            <column name="entity_type"/>
         </constraint>
-        <constraint xsi:type="foreign" referenceId="SOFTCOMMERCE_REBOUND_ORDER_EXPORT_ENTT_ID_SALES_ORDER_ENTT_ID"
-                    table="softcommerce_rebound_order_export" column="entity_id"
+        <constraint xsi:type="unique" referenceId="SOFTCOMMERCE_REBOUND_ORDER_ENTITY_ENTITY_TYPE_ORDER_ID">
+            <column name="entity_type"/>
+            <column name="order_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="SOFTCOMMERCE_REBOUND_ORDER_ENTITY_ORDER_ID_SALES_ORDER_ENTITY_ID"
+                    table="softcommerce_rebound_order_entity" column="order_id"
                     referenceTable="sales_order" referenceColumn="entity_id"
                     onDelete="CASCADE"/>
     </table>
     <table name="sales_order">
         <column xsi:type="varchar" name="rebound_order_status" nullable="true" length="16" default="new"
+                comment="Rebound Order Status"/>
+        <column xsi:type="varchar" name="rebound_order" nullable="true" length="64"
+                comment="Rebound Order"/>
+    </table>
+    <table name="sales_order_grid" resource="sales" comment="Sales Flat Order Grid">
+        <column xsi:type="varchar" name="rebound_order_status" nullable="true" length="16"
                 comment="Rebound Order Status"/>
         <column xsi:type="varchar" name="rebound_order" nullable="true" length="64"
                 comment="Rebound Order"/>

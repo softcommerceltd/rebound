@@ -83,11 +83,12 @@ class Processor extends AbstractService implements ProcessorInterface
             } catch (\Exception $e) {
                 $this->getContext()
                     ->addResponse(
-                        [
-                            'order_id' => $this->getContext()->getSalesOrder()->getIncrementId(),
-                            'entity' => $entityType,
-                            'message' => $e->getMessage()
-                        ],
+                        __(
+                            '%1. [Order: %2, Entity: %3]',
+                            $e->getMessage(),
+                            $this->getContext()->getSalesOrder()->getIncrementId(),
+                            $entityType
+                        ),
                         Status::ERROR
                     )->addToClientOrder(
                         $entityType,

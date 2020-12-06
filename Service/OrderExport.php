@@ -166,10 +166,6 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
 
         /** @var SalesOrder $order */
         foreach ($collection->getItems() as $order) {
-            if (!$this->canProcess($order)) {
-                continue;
-            }
-            
             try {
                 $this->process($order);
             } catch (\Exception $e) {
@@ -192,10 +188,6 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
         }
 
         $context = [];
-        if ($request = $this->getRequest()) {
-            $context['request'][] = $request;
-        }
-
         if ($response = $this->getResponse()) {
             $context['response'][] = $response;
         }
@@ -226,23 +218,38 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
     {
         $this->error =
         $this->request =
+        $this->clientOrder =
+        $this->salesOrderReboundId =
             [];
         $this->salesOrder = $order;
         $orderId = $this->getSalesOrder()->getId();
 
-        if (!isset($this->clientOrder[$orderId])) {
-            foreach ($this->resource->getClientOrders((int) $orderId, $this->getEntityFilter()) as $item) {
-                if (!isset($item[Api\Data\OrderExportInterface::ENTITY_TYPE])) {
-                    continue;
-                }
-                $this->addToClientOrder(
-                    $item[Api\Data\OrderExportInterface::ENTITY_TYPE],
-                    [
-                        Api\Data\OrderExportInterface::EXTERNAL_ID => $item[Api\Data\OrderExportInterface::EXTERNAL_ID]
-                            ?? null
-                    ]
-                );
+        foreach ($this->resource->getClientOrders((int) $orderId, $this->getEntityFilter()) as $item) {
+            if (!isset($item[Api\Data\OrderExportInterface::ENTITY_TYPE])) {
+                continue;
             }
+            $this->addToClientOrder(
+                $item[Api\Data\OrderExportInterface::ENTITY_TYPE],
+                [
+                    Api\Data\OrderExportInterface::EXTERNAL_ID => $item[Api\Data\OrderExportInterface::EXTERNAL_ID]
+                        ?? null
+                ]
+            );
+        }
+
+        if ($this->canProcess()) {
+            return $this;
+        }
+
+        if (strtotime($this->getSalesOrder()->getCreatedAt())
+            < strtotime($this->dateTime->date(null, '- 1 month'))
+        ) {
+            throw new LocalizedException(
+                __(
+                    'Could not export order due to being incomplete over a month. [Order: %1]',
+                    $this->getSalesOrder()->getIncrementId()
+                )
+            );
         }
 
         return $this;
@@ -269,14 +276,12 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
      */
     private function processAfter()
     {
-        if (!$clientOrders = $this->getClientOrder()) {
+        if (!$this->getError() && !$this->getClientOrder()) {
             return $this;
         }
 
-        $bind =
-        $status =
-        $externalId =
-            [];
+        $bind = $externalId = [];
+        $status = $this->getError() ? [Status::ERROR] : [];
         $salesOrder = $this->getSalesOrder();
         $commentHtml = '<b>' . __('Rebound Order Synchronisation.') . '</b><br />';
         foreach ($this->getClientOrder() as $entity => $order) {
@@ -292,12 +297,16 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
             }
 
             if (isset($order[Api\Data\OrderExportInterface::EXTERNAL_ID])) {
-                $externalId[$entity] = $order[Api\Data\OrderExportInterface::EXTERNAL_ID];
+                $externalId[$entity] = (int) $order[Api\Data\OrderExportInterface::EXTERNAL_ID];
             }
 
             if (isset($order[Api\Data\OrderExportInterface::STATUS])) {
                 $status[] = $order[Api\Data\OrderExportInterface::STATUS];
             }
+        }
+
+        foreach ($this->getError() as $error) {
+            $commentHtml .= "<i>$error</i><br />";
         }
 
         if (!empty($externalId)) {
@@ -315,10 +324,11 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
             $status = Status::COMPLETE;
         }
 
-        $bind[Api\Data\OrderExportInterface::REBOUND_ORDER_STATUS] = $status;
-
         try {
-            $this->resource->insertOnDuplicate($clientOrders);
+            if ($clientOrders = $this->getClientOrder()) {
+                $this->resource->insertOnDuplicate($clientOrders);
+            }
+
             $history = $this->salesOrderHistoryFactory
                 ->create()
                 ->setParentId($salesOrder->getId())
@@ -329,10 +339,7 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
                 ->setIsVisibleOnFront(false);
             $this->salesOrderHistoryRepository->save($history);
 
-            if (empty($bind)) {
-                return $this;
-            }
-
+            $bind[Api\Data\OrderExportInterface::REBOUND_ORDER_STATUS] = $status;
             $adapter = $this->resource->getConnection();
             $adapter->update(
                 $adapter->getTableName('sales_order'),
@@ -345,6 +352,16 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
                 $salesOrder->getIncrementId(),
                 $e->getMessage()
             ));
+        }
+
+        if (!$this->config->getIsActiveDebug() || !$request = $this->getRequest()) {
+            return $this;
+        }
+
+        if ($this->config->getIsDebugPrintToArray()) {
+            $this->logger->debug(print_r([__METHOD__ => $request], true), []);
+        } else {
+            $this->logger->debug(__METHOD__, $request);
         }
 
         return $this;
@@ -367,7 +384,10 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
             );
         }
 
-        return $this->processAfter();
+        $this->setError($message)
+            ->processAfter();
+
+        return $this;
     }
 
     /**
@@ -393,11 +413,11 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
     }
 
     /**
-     * @param SalesOrder $salesOrder
      * @return bool
+     * @throws LocalizedException
      */
-    protected function canProcess(SalesOrder $salesOrder): bool
+    private function canProcess(): bool
     {
-        return (bool) $salesOrder->getShipmentsCollection()->getSize();
+        return (bool) $this->getSalesOrder()->getShipmentsCollection()->getSize();
     }
 }

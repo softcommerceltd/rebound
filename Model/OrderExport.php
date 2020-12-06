@@ -18,8 +18,16 @@ use SoftCommerce\Rebound\Model\ResourceModel;
  */
 class OrderExport extends AbstractModel implements OrderExportInterface, IdentityInterface
 {
-    const CACHE_TAG = 'softcommerce_rebound_orderexport';
+    const CACHE_TAG = 'softcommerce_rebound_order_entity';
+
+    /**
+     * @var string
+     */
     protected $_cacheTag = 'softcommerce_rebound_orderexport';
+
+    /**
+     * @var string
+     */
     protected $_eventPrefix = 'softcommerce_rebound_orderexport';
 
     /**
@@ -57,7 +65,25 @@ class OrderExport extends AbstractModel implements OrderExportInterface, Identit
     }
 
     /**
-     * @return string|null
+     * @return int|null
+     */
+    public function getOrderId(): int
+    {
+        return $this->getData(self::ORDER_ID);
+    }
+
+    /**
+     * @param int $orderId
+     * @return $this
+     */
+    public function setOrderId(int $orderId)
+    {
+        $this->setData(self::ORDER_ID, $orderId);
+        return $this;
+    }
+
+    /**
+     * @return int|string|null
      */
     public function getIncrementId()
     {
@@ -65,10 +91,10 @@ class OrderExport extends AbstractModel implements OrderExportInterface, Identit
     }
 
     /**
-     * @param int $incrementId
+     * @param int|string $incrementId
      * @return $this
      */
-    public function setIncrementId(int $incrementId)
+    public function setIncrementId($incrementId)
     {
         $this->setData(self::INCREMENT_ID, $incrementId);
         return $this;
@@ -89,6 +115,24 @@ class OrderExport extends AbstractModel implements OrderExportInterface, Identit
     public function setExternalId(int $externalId)
     {
         $this->setData(self::EXTERNAL_ID, $externalId);
+        return $this;
+    }
+
+    /**
+     * @return int|string|null
+     */
+    public function getReferenceId()
+    {
+        return $this->getData(self::REFERENCE_ID);
+    }
+
+    /**
+     * @param int|string|null $referenceId
+     * @return $this
+     */
+    public function setReferenceId($referenceId)
+    {
+        $this->setData(self::REFERENCE_ID, $referenceId);
         return $this;
     }
 
@@ -130,6 +174,7 @@ class OrderExport extends AbstractModel implements OrderExportInterface, Identit
 
     /**
      * @return string|null
+     * @deprecared
      */
     public function getRequestEntry()
     {
@@ -139,6 +184,7 @@ class OrderExport extends AbstractModel implements OrderExportInterface, Identit
     /**
      * @param $request
      * @return $this
+     * @deprecared
      */
     public function setRequestEntry($request)
     {

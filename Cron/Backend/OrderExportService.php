@@ -45,7 +45,7 @@ class OrderExportService
         try {
             $this->orderExportService->execute();
         } catch (\Exception $e) {
-            $this->logger->log(100, $e->getMessage());
+            $this->logger->debug(__METHOD__, ['error' => $e->getMessage()]);
         }
     }
 }

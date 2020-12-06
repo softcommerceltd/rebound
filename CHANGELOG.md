@@ -1,5 +1,12 @@
 ## Changelog
 
+### Version 1.0.4
+- **Feature**: Added manual order export from order grid and view pages.
+- **Improvement**: Introduced new order entity database table to incorporate more rebound services.
+- **Compatibility**: Added compatibility for MySQL 8.
+- **Improvement**: Added functionality to export orders manually
+- **Improvement**: Added UI grid to rebound order.
+
 ### Version 1.0.3
 - **Fix**: Changes to composer.json
 

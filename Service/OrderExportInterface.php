@@ -16,6 +16,7 @@ interface OrderExportInterface
     const PROCESS_SIZE = 1000;
     const ENTITY_FILTER = 'entity_filter';
     const SEARCH_CRITERIA = 'search_criteria';
+    const BEHAVIOUR_OVERWRITE = 'overwrite';
 
     /**
      * @param null $key
@@ -69,6 +70,17 @@ interface OrderExportInterface
      * @return $this
      */
     public function addRequest($data, $key = null);
+
+    /**
+     * @return string|null
+     */
+    public function getBehaviour(): ?string;
+
+    /**
+     * @param string $behaviour
+     * @return $this
+     */
+    public function setBehaviour(string $behaviour);
 
     /**
      * @return SearchCriteriaInterface

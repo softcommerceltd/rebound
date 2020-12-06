@@ -13,13 +13,15 @@ namespace SoftCommerce\Rebound\Api\Data;
  */
 interface OrderExportInterface
 {
-    const DB_TABLE_NAME = 'softcommerce_rebound_order_export';
+    const DB_TABLE_NAME = 'softcommerce_rebound_order_entity';
 
     // Model metadata
     const ENTITY_ID = 'entity_id';
     const ENTITY_TYPE = 'entity_type';
+    const ORDER_ID = 'order_id';
     const INCREMENT_ID = 'increment_id';
     const EXTERNAL_ID = 'external_id';
+    const REFERENCE_ID = 'reference_id';
     const STATUS = 'status';
     const MESSAGE = 'message';
     const REQUEST_ENTRY = 'request_entry';
@@ -42,6 +44,17 @@ interface OrderExportInterface
     public function setEntityType(string $entityType);
 
     /**
+     * @return int|null
+     */
+    public function getOrderId(): int;
+
+    /**
+     * @param int $orderId
+     * @return $this
+     */
+    public function setOrderId(int $orderId);
+
+    /**
      * @return string|null
      */
     public function getIncrementId();
@@ -62,6 +75,17 @@ interface OrderExportInterface
      * @return $this
      */
     public function setExternalId(int $externalId);
+
+    /**
+     * @return int|string|null
+     */
+    public function getReferenceId();
+
+    /**
+     * @param int|string|null $referenceId
+     * @return $this
+     */
+    public function setReferenceId($referenceId);
 
     /**
      * @return string|null

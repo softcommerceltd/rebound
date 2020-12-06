@@ -7,12 +7,14 @@ namespace SoftCommerce\Rebound\Setup\Patch\Data;
 
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
+use SoftCommerce\Rebound\Api\Data\OrderExportInterface;
+use SoftCommerce\Rebound\Model\Source\Status;
 
 /**
- * Class DeleteConfigDataRecycling
+ * Class SalesOrderSetReboundStatusPending
  * @package SoftCommerce\Rebound\Setup\Patch\Data
  */
-class DeleteConfigDataRecycling implements DataPatchInterface
+class SalesOrderSetReboundStatusPending implements DataPatchInterface
 {
     /**
      * @var ModuleDataSetupInterface
@@ -20,12 +22,11 @@ class DeleteConfigDataRecycling implements DataPatchInterface
     private ModuleDataSetupInterface $moduleDataSetup;
 
     /**
-     * DeleteConfigDataRecycling constructor.
+     * SalesOrderSetReboundStatusPending constructor.
      * @param ModuleDataSetupInterface $moduleDataSetup
      */
-    public function __construct(
-        ModuleDataSetupInterface $moduleDataSetup
-    ) {
+    public function __construct(ModuleDataSetupInterface $moduleDataSetup)
+    {
         $this->moduleDataSetup = $moduleDataSetup;
     }
 
@@ -37,9 +38,13 @@ class DeleteConfigDataRecycling implements DataPatchInterface
         $this->moduleDataSetup->getConnection()->startSetup();
         $connection = $this->moduleDataSetup->getConnection();
 
-        $connection->delete(
-            $this->moduleDataSetup->getTable('core_config_data'),
-            ['path LIKE ?' => 'softcommerce_rebound%']
+        $connection->update(
+            $this->moduleDataSetup->getTable('sales_order'),
+            [OrderExportInterface::REBOUND_ORDER_STATUS => Status::PENDING],
+            [
+                'created_at >= ?' => '2019-11-01',
+                'status in (?)' => ['complete', 'processing', 'pap']
+            ]
         );
 
         $connection->endSetup();

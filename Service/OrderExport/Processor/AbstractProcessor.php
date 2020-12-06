@@ -3,6 +3,8 @@
  * Copyright © Soft Commerce Ltd, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
+declare(strict_types=1);
 namespace SoftCommerce\Rebound\Service\OrderExport\Processor;
 
 use Magento\Framework\Exception\LocalizedException;
@@ -69,17 +71,10 @@ class AbstractProcessor extends AbstractService
 
     /**
      * @return AbstractProcessor
-     * @throws LocalizedException
      */
     public function executeBefore()
     {
         $this->clientResponse = [];
-        $isExistingEntry = (bool) $this->getContext()
-            ->getClientOrder($this->entityType, OrderExportInterface::EXTERNAL_ID);
-        if ($isExistingEntry) {
-            $this->getContext()->setRequest(true, ClientOrderInterface::OVERWRITE_DATA);
-        }
-
         return parent::executeBefore();
     }
 
@@ -94,16 +89,12 @@ class AbstractProcessor extends AbstractService
         if (!$this->canProcess() || !$request = $this->getContext()->getRequest()) {
             $this->getContext()
                 ->addResponse(
-                    [
-                        'order_id' => $this->getContext()->getSalesOrder()->getIncrementId(),
-                        'entity' => $this->entityType,
-                        'message' => __(
-                            'Could not export. [Order: %1, Entity: %2. Reason: %3]',
-                            $this->getContext()->getSalesOrder()->getIncrementId(),
-                            $this->entityType,
-                            $this->getContext()->getRequest() ? 'Not allowed for export.' : 'Request data is not set.'
-                        )
-                    ],
+                    __(
+                        'Could not export. [Order: %1, Entity: %2. Reason: %3]',
+                        $this->getContext()->getSalesOrder()->getIncrementId(),
+                        $this->entityType,
+                        $this->getContext()->getRequest() ? 'Not allowed for export.' : 'Request data is not set.'
+                    ),
                     Status::ERROR
                 );
             return $this;
@@ -116,6 +107,7 @@ class AbstractProcessor extends AbstractService
 
         $this->clientResponse = $this->client->getResponseContents();
         $this->executeAfter();
+
         return $this;
     }
 
@@ -159,46 +151,32 @@ class AbstractProcessor extends AbstractService
             );
         }
 
-        $message = $response[ClientOrderInterface::MESSAGE] ?? 'Order has been created';
-        $this->addClientEntry($clientOrderId, Status::COMPLETE, $message)
-            ->getContext()
-            ->addResponse(
-                [
-                    'order_id' => $salesOrder->getIncrementId(),
-                    'client_id' => $clientOrderId,
-                    'entity' => $this->entityType,
-                    'message' => $message
-                ],
-                Status::SUCCESS
-            );
-
-        return parent::executeAfter();
-    }
-
-    /**
-     * @param int $clientOrderId
-     * @param string $status
-     * @param $message
-     * @return $this
-     * @throws LocalizedException
-     */
-    public function addClientEntry(int $clientOrderId, string $status, $message)
-    {
+        $message = $response[ClientOrderInterface::MESSAGE] ?? 'Order has been created.';
         $this->getContext()
             ->addToClientOrder(
                 $this->entityType,
                 [
-                    OrderExportInterface::EXTERNAL_ID => $clientOrderId,
-                    OrderExportInterface::STATUS => $status,
-                    OrderExportInterface::MESSAGE => $message,
-                    OrderExportInterface::REQUEST_ENTRY => $this->serializer
-                        ->serialize($this->getContext()->getRequest()),
+                    OrderExportInterface::EXTERNAL_ID => (int) $clientOrderId,
+                    OrderExportInterface::REFERENCE_ID => $response[ClientOrderInterface::ORDER_REFERENCE]
+                        ?? $this->getSalesOrder()->getIncrementId(),
+                    OrderExportInterface::STATUS => Status::COMPLETE,
+                    OrderExportInterface::MESSAGE => $response[ClientOrderInterface::MESSAGE]
+                        ?? 'Order has been created.',
                     OrderExportInterface::RESPONSE_ENTRY => $this->serializer
                         ->serialize($this->clientResponse ?: [])
                 ]
+            )->addResponse(
+                __(
+                    '%1. [Order: %2, Client ID: %3, Entity: %4]',
+                    $message,
+                    $salesOrder->getIncrementId(),
+                    $clientOrderId,
+                    $this->entityType
+                ),
+                Status::SUCCESS
             );
 
-        return $this;
+        return parent::executeAfter();
     }
 
     /**
@@ -207,10 +185,9 @@ class AbstractProcessor extends AbstractService
      */
     protected function canProcess(): bool
     {
-        return $this->getContext()->getSalesOrder()->getShipmentsCollection()->getSize()
-                && ((!$this->getContext()->getSalesOrderReboundId($this->entityType)
-                    && $this->getContext()->getSalesOrderReboundStatus() === Status::PENDING)
-                || in_array($this->entityType, $this->getContext()->getEntityFilter())
-                || !empty($this->getContext()->getSearchCriteria()));
+        return !$this->getContext()->getSalesOrderReboundId($this->entityType)
+            || $this->getContext()->getSalesOrderReboundStatus() === Status::PENDING
+            || in_array($this->entityType, $this->getContext()->getEntityFilter())
+            || $this->getContext()->getSearchCriteria();
     }
 }

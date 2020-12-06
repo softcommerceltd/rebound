@@ -12,9 +12,7 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-
 use SoftCommerce\Rebound\Api;
-use SoftCommerce\Rebound\Model\Source\OrderEntityType;
 
 /**
  * Class OrderExportRepository
@@ -25,27 +23,27 @@ class OrderExportRepository implements Api\OrderExportRepositoryInterface
     /**
      * @var ResourceModel\OrderExport
      */
-    private $_resource;
+    private ResourceModel\OrderExport $resource;
 
     /**
      * @var OrderExportFactory
      */
-    private $_entityFactory;
+    private OrderExportFactory $entityFactory;
 
     /**
      * @var ResourceModel\OrderExport\CollectionFactory
      */
-    private $_collectionFactory;
+    private ResourceModel\OrderExport\CollectionFactory $collectionFactory;
 
     /**
      * @var Api\Data\OrderExportSearchResultsInterface
      */
-    private $_searchResultsFactory;
+    private $searchResultsFactory;
 
     /**
      * @var CollectionProcessorInterface
      */
-    private $_collectionProcessor;
+    private $collectionProcessor;
 
     /**
      * OrderExportRepository constructor.
@@ -62,11 +60,11 @@ class OrderExportRepository implements Api\OrderExportRepositoryInterface
         Api\Data\OrderExportSearchResultsInterfaceFactory $searchResultsFactory,
         CollectionProcessorInterface $collectionProcessor = null
     ) {
-        $this->_resource = $resource;
-        $this->_entityFactory = $entityFactory;
-        $this->_collectionFactory = $collectionFactory;
-        $this->_searchResultsFactory = $searchResultsFactory;
-        $this->_collectionProcessor = $collectionProcessor
+        $this->resource = $resource;
+        $this->entityFactory = $entityFactory;
+        $this->collectionFactory = $collectionFactory;
+        $this->searchResultsFactory = $searchResultsFactory;
+        $this->collectionProcessor = $collectionProcessor
             ?: ObjectManager::getInstance()->get(CollectionProcessorInterface::class);
     }
 
@@ -76,75 +74,16 @@ class OrderExportRepository implements Api\OrderExportRepositoryInterface
      */
     public function getList(SearchCriteriaInterface $searchCriteria)
     {
-        /** @var ResourceModel\OrderExport\Collection $collection */
-        $collection = $this->_collectionFactory->create();
-        $this->_collectionProcessor->process($searchCriteria, $collection);
+        $collection = $this->collectionFactory->create();
+        $this->collectionProcessor->process($searchCriteria, $collection);
 
         /** @var Api\Data\OrderExportSearchResultsInterface $searchResults */
-        $searchResult = $this->_searchResultsFactory->create();
+        $searchResult = $this->searchResultsFactory->create();
         $searchResult->setSearchCriteria($searchCriteria);
         $searchResult->setItems($collection->getItems());
         $searchResult->setTotalCount($collection->getSize());
 
         return $searchResult;
-    }
-
-    /**
-     * @param SearchCriteriaInterface|null $searchCriteria
-     * @return array
-     */
-    public function getAllIds(SearchCriteriaInterface $searchCriteria = null)
-    {
-        /** @var ResourceModel\OrderExport\Collection $collection */
-        $collection = $this->_collectionFactory->create();
-        if (null === $searchCriteria) {
-            return $collection->getAllIds();
-        }
-
-        $this->_collectionProcessor->process($searchCriteria, $collection);
-
-        return $collection->getAllIds();
-    }
-
-    /**
-     * @return array
-     * @throws LocalizedException
-     */
-    public function getPendingRecords()
-    {
-        return $this->_resource->getPendingRecords();
-    }
-
-    /**
-     * @param string $field
-     * @return array
-     * @throws LocalizedException
-     */
-    public function getProcessedEntries($field = '*')
-    {
-        return $this->_resource->getProcessedEntries($field);
-    }
-
-    /**
-     * @param int $salesOrderId
-     * @param string $entityType
-     * @return string
-     * @throws LocalizedException
-     */
-    public function getClientOrderId(int $salesOrderId, $entityType = OrderEntityType::RETURNS)
-    {
-        return $this->_resource->getClientOrderId($salesOrderId, $entityType);
-    }
-
-    /**
-     * @param int $salesOrderId
-     * @param array $entityType
-     * @return array
-     * @throws LocalizedException
-     */
-    public function getClientOrderIds(int $salesOrderId, array $entityType = [])
-    {
-        return $this->_resource->getClientOrderIds($salesOrderId, $entityType);
     }
 
     /**
@@ -156,8 +95,8 @@ class OrderExportRepository implements Api\OrderExportRepositoryInterface
     public function get($entityId, $field = null)
     {
         /** @var Api\Data\OrderExportInterface|OrderExport $entity */
-        $entity = $this->_entityFactory->create();
-        $this->_resource->load($entity, $entityId, $field);
+        $entity = $this->entityFactory->create();
+        $this->resource->load($entity, $entityId, $field);
         if (!$entity->getId()) {
             throw new NoSuchEntityException(__('The entity with ID "%1" doesn\'t exist.', $entityId));
         }
@@ -171,7 +110,7 @@ class OrderExportRepository implements Api\OrderExportRepositoryInterface
      */
     public function getLastUpdatedAt()
     {
-        return $this->_resource->getLastUpdatedAt();
+        return $this->resource->getLastUpdatedAt();
     }
 
     /**
@@ -182,26 +121,11 @@ class OrderExportRepository implements Api\OrderExportRepositoryInterface
     public function save(Api\Data\OrderExportInterface $entity)
     {
         try {
-            $this->_resource->save($entity);
+            $this->resource->save($entity);
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(__($exception->getMessage()));
         }
         return $entity;
-    }
-
-    /**
-     * @param array $entries
-     * @return int
-     * @throws CouldNotSaveException
-     */
-    public function saveMultiple(array $entries)
-    {
-        try {
-            $result = $this->_resource->insertOnDuplicate($entries);
-        } catch (\Exception $exception) {
-            throw new CouldNotSaveException(__($exception->getMessage()));
-        }
-        return $result;
     }
 
     /**
@@ -212,7 +136,7 @@ class OrderExportRepository implements Api\OrderExportRepositoryInterface
     public function delete(Api\Data\OrderExportInterface $entity)
     {
         try {
-            $this->_resource->delete($entity);
+            $this->resource->delete($entity);
         } catch (\Exception $exception) {
             throw new CouldNotDeleteException(__($exception->getMessage()));
         }

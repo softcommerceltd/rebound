@@ -20,13 +20,13 @@
              parent="SoftCommerce_Rebound::core"
              action="adminhtml/system_config/edit/section/softcommerce_rebound/"
              resource="SoftCommerce_Rebound::configuration"/>
-        <add id="SoftCommerce_Rebound::order_export"
-             title="Order Export"
+        <add id="SoftCommerce_Rebound::order_list"
+             title="Order Listing"
              translate="title"
              module="SoftCommerce_Rebound"
              sortOrder="20"
              parent="SoftCommerce_Rebound::core"
              action="softcommerce_rebound/order/"
-             resource="SoftCommerce_Rebound::order_export"/>
+             resource="SoftCommerce_Rebound::order_list"/>
     </menu>
 </config>

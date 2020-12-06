@@ -11,7 +11,6 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\LocalizedException;
 use SoftCommerce\Rebound\Model\OrderExport;
-use SoftCommerce\Rebound\Model\Source\OrderEntityType;
 
 /**
  * Interface OrderExportRepositoryInterface
@@ -24,41 +23,6 @@ interface OrderExportRepositoryInterface
      * @return Data\OrderExportSearchResultsInterface
      */
     public function getList(SearchCriteriaInterface $searchCriteria);
-
-    /**
-     * @param SearchCriteriaInterface|null $searchCriteria
-     * @return array
-     */
-    public function getAllIds(SearchCriteriaInterface $searchCriteria = null);
-
-    /**
-     * @return array
-     * @throws LocalizedException
-     */
-    public function getPendingRecords();
-
-    /**
-     * @param string $field
-     * @return array
-     * @throws LocalizedException
-     */
-    public function getProcessedEntries($field = '*');
-
-    /**
-     * @param int $salesOrderId
-     * @param string $entityType
-     * @return string
-     * @throws LocalizedException
-     */
-    public function getClientOrderId(int $salesOrderId, $entityType = OrderEntityType::RETURNS);
-
-    /**
-     * @param int $salesOrderId
-     * @param array $entityType
-     * @return array
-     * @throws LocalizedException
-     */
-    public function getClientOrderIds(int $salesOrderId, array $entityType = []);
 
     /**
      * @param $entityId
@@ -80,13 +44,6 @@ interface OrderExportRepositoryInterface
      * @throws CouldNotSaveException
      */
     public function save(Data\OrderExportInterface $entity);
-
-    /**
-     * @param array $entries
-     * @return int
-     * @throws CouldNotSaveException
-     */
-    public function saveMultiple(array $entries);
 
     /**
      * @param Data\OrderExportInterface $entity

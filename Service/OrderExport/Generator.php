@@ -129,6 +129,7 @@ class Generator extends AbstractService implements ProcessorInterface
                     ClientOrderInterface::FIELD4 => $salesOrder->getShippingAmount(),
                     ClientOrderInterface::FIELD5 => $salesOrder->getWeight()
                 ],
+                ClientOrderInterface::OVERWRITE_DATA => true
             ]
         );
 
@@ -141,19 +142,12 @@ class Generator extends AbstractService implements ProcessorInterface
      */
     private function buildItemData()
     {
-        $salesOrder = $this->getContext()->getSalesOrder();
-        if (!$address = $salesOrder->getShippingAddress()) {
-            if (!$address = $salesOrder->getBillingAddress()) {
-                throw new LocalizedException(
-                    __('Could not get order address. Order: %1', $salesOrder->getIncrementId())
-                );
-            }
-        }
-
         $request = [];
         /** @var SalesOrderItem $item */
-        foreach ($salesOrder->getAllVisibleItems() as $item) {
-            $product = $this->getProduct($item);
+        foreach ($this->getContext()->getSalesOrder()->getAllVisibleItems() as $item) {
+            if (!$product = $this->getProduct($item)) {
+                throw new LocalizedException(__('Could not find product SKU: %1', $item->getSku()));
+            }
             $request[] = [
                 ClientOrderInterface::SKU_CODE => $item->getSku(),
                 ClientOrderInterface::SKU_DESC => $item->getName(),
@@ -165,20 +159,16 @@ class Generator extends AbstractService implements ProcessorInterface
                 ClientOrderInterface::HEIGHT => $item->getHeight(),
                 ClientOrderInterface::DIMENSIONS_UOM => 'mm',
                 ClientOrderInterface::HS_CODE => $product->getData('commodity_code'),
-                ClientOrderInterface::COUNTRY_CODE => $address->getCountryId(),
+                ClientOrderInterface::COUNTRY_CODE => $product->getAttributeText('country_of_manufacture'),
                 ClientOrderInterface::DANGEROUS_GOODS => 'No',
                 ClientOrderInterface::EXPORT_DATE => $this->dateTime->gmtDate(),
-                // ClientOrderInterface::EXPORT_AWB => $tracks,
-                // ClientOrderInterface::TRACKING => $tracks,
                 ClientOrderInterface::DAYS_FOR_RETURN => 365,
-                ClientOrderInterface::SKU_URL => null !== $product ? $product->getProductUrl() : '',
-                ClientOrderInterface::IMG_PATH => null !== $product
-                    ? (string) $this->productImageFactory
-                        ->create()
-                        ->init($product, 'product_page_image_large')
-                        ->setImageFile($product->getImage())
-                        ->getUrl()
-                    : '',
+                ClientOrderInterface::SKU_URL => $product->getProductUrl(),
+                ClientOrderInterface::IMG_PATH => (string) $this->productImageFactory
+                    ->create()
+                    ->init($product, 'product_page_image_large')
+                    ->setImageFile($product->getImage())
+                    ->getUrl(),
                 ClientOrderInterface::CUSTOM_FIELDS => []
             ];
         }

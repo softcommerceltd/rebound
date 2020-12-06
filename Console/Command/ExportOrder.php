@@ -11,6 +11,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
+use SoftCommerce\Rebound\Api;
 use SoftCommerce\Rebound\Service\OrderExportInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -27,6 +28,7 @@ class ExportOrder extends AbstractCommand
     const DATE_FILTER = 'date';
     const STATUS_FILTER = 'status';
     const ENTITY_FILTER = 'entity';
+    const BEHAVIOUR_FILTER = 'behaviour';
 
     /**
      * @var OrderExportInterface
@@ -86,6 +88,12 @@ class ExportOrder extends AbstractCommand
                     InputOption::VALUE_REQUIRED,
                     'Entity Filter [returns and/or recycling]'
                 ),
+                new InputOption(
+                    self::BEHAVIOUR_FILTER,
+                    '-b',
+                    InputOption::VALUE_REQUIRED,
+                    'Behaviour Filter [overwrite]'
+                ),
             ]);
 
         parent::configure();
@@ -107,7 +115,7 @@ class ExportOrder extends AbstractCommand
             $output->writeln(sprintf('<info>Exporting orders by status %s.</info>', $statusFilter));
             $statusFilter = explode(',', str_replace(' ', '', $statusFilter));
             $filter = $this->filterBuilder
-                ->setField(OrderInterface::STATUS)
+                ->setField(Api\Data\OrderExportInterface::REBOUND_ORDER_STATUS)
                 ->setValue($statusFilter)
                 ->setConditionType('in')
                 ->create();
@@ -136,9 +144,14 @@ class ExportOrder extends AbstractCommand
         }
 
         if ($entityFilter = $input->getOption(self::ENTITY_FILTER)) {
-            $output->writeln(sprintf('<info>Exporting orders by entity type %1.</info>', $dateFilter));
+            $output->writeln(sprintf('<info>Exporting orders with entity type filter %1.</info>', $dateFilter));
             $entityFilter = explode(',', str_replace(' ', '', $entityFilter));
             $this->orderExportService->setEntityFilter($entityFilter);
+        }
+
+        if ($behaviourFilter = $input->getOption(self::BEHAVIOUR_FILTER)) {
+            $output->writeln(sprintf('<info>Exporting orders with behaviour filter %1.</info>', $behaviourFilter));
+            $this->orderExportService->setBehaviour($behaviourFilter);
         }
 
         if (!empty($filterGroup)) {

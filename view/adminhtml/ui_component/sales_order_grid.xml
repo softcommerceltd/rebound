@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright © Soft Commerce Ltd. All rights reserved.
+ ~ See LICENSE.txt for license details.
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <columns name="sales_order_columns">
+        <column name="rebound_order_status">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Rebound Status</label>
+                <visible>true</visible>
+            </settings>
+        </column>
+        <column name="rebound_order" class="SoftCommerce\Rebound\Ui\Component\Listing\Column\OrderId">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Rebound Order</label>
+                <visible>true</visible>
+            </settings>
+        </column>
+    </columns>
+    <listingToolbar name="listing_top">
+        <massaction name="listing_massaction">
+            <action name="rebound_order_export">
+                <settings>
+                    <url path="softcommerce_rebound/sales_order/massScheduleExport"/>
+                    <type>rebound_order_export</type>
+                    <label translate="true">Schedule export to Rebound</label>
+                    <confirm>
+                        <message translate="true">Schedule export selected orders to Rebound?</message>
+                        <title translate="true">Rebound</title>
+                    </confirm>
+                </settings>
+            </action>
+        </massaction>
+    </listingToolbar>
+</listing>

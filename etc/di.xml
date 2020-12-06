@@ -10,6 +10,7 @@
     <preference for="SoftCommerce\Rebound\Api\Data\OrderExportSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
     <preference for="SoftCommerce\Rebound\Api\OrderExportManagementInterface" type="SoftCommerce\Rebound\Model\OrderExportManagement"/>
     <preference for="SoftCommerce\Rebound\Http\ClientInterface" type="SoftCommerce\Rebound\Http\Client"/>
+    <!-- order export ::: service -->
     <preference for="SoftCommerce\Rebound\Service\OrderExportInterface" type="SoftCommerce\Rebound\Service\OrderExport"/>
     <type name="SoftCommerce\Rebound\Service\OrderExport">
         <arguments>
@@ -29,6 +30,46 @@
     </type>
     <!-- config -->
     <preference for="SoftCommerce\Rebound\Model\ConfigInterface" type="SoftCommerce\Rebound\Model\Config"/>
+    <!-- Order export ::: UI List -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="softcommerce_rebound_order_listing_data_source" xsi:type="string">SoftCommerce\Rebound\Model\ResourceModel\OrderExport\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="SoftCommerce\Rebound\Model\ResourceModel\OrderExport\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">softcommerce_rebound_order_entity</argument>
+            <argument name="resourceModel" xsi:type="string">SoftCommerce\Rebound\Model\ResourceModel\OrderExport</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\Model\Entity\RepositoryFactory">
+        <arguments>
+            <argument name="entities" xsi:type="array">
+                <item name="SoftCommerce\Rebound\Api\Data\OrderExportInterface" xsi:type="string">SoftCommerce\Rebound\Api\OrderExportRepositoryInterface</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="SoftCommerce\Rebound\Api\Data\OrderExportInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">softcommerce_rebound_order_entity</item>
+                    <item name="identifierField" xsi:type="string">entity_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- rebound order metadata to sales order grid -->
+    <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid" type="Magento\Sales\Model\ResourceModel\Grid">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item name="rebound_order" xsi:type="string">sales_order.rebound_order</item>
+                <item name="rebound_order_status" xsi:type="string">sales_order.rebound_order_status</item>
+            </argument>
+        </arguments>
+    </virtualType>
     <!-- CLI -->
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
@@ -49,5 +90,10 @@
         <arguments>
             <argument name="logger" xsi:type="object">SoftCommerceReboundVirtualLogger</argument>
         </arguments>
+    </type>
+    <type name="Magento\Sales\Model\Service\OrderService">
+        <plugin name="sales_order_cancel_rebound_order" type="SoftCommerce\Rebound\Plugin\SalesOrderCancelRegister" />
+        <plugin name="sales_order_reserve_rebound_order" type="SoftCommerce\Rebound\Plugin\SalesOrderReserveRegister" />
+        <plugin name="sales_order_release_rebound_order" type="SoftCommerce\Rebound\Plugin\SalesOrderReleaseRegister" />
     </type>
 </config>
