@@ -1,0 +1,35 @@
+{
+    "softcommerce_rebound_order_export": [],
+    "softcommerce_rebound_order_entity": {
+        "column": {
+            "entity_id": true,
+            "entity_type": true,
+            "order_id": true,
+            "increment_id": true,
+            "external_id": true,
+            "reference_id": true,
+            "status": true,
+            "message": true,
+            "response_entry": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "SOFTCOMMERCE_REBOUND_ORDER_ENTITY_ENTITY_TYPE_ORDER_ID": true,
+            "SOFTCOMMERCE_REBOUND_ORDER_ENTITY_ORDER_ID_SALES_ORDER_ENTITY_ID": true
+        }
+    },
+    "sales_order": {
+        "column": {
+            "rebound_order_status": true,
+            "rebound_order": true
+        }
+    },
+    "sales_order_grid": {
+        "column": {
+            "rebound_order_status": true,
+            "rebound_order": true
+        }
+    }
+}
