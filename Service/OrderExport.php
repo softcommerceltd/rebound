@@ -222,8 +222,20 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
         $this->salesOrderReboundId =
             [];
         $this->salesOrder = $order;
-        $orderId = $this->getSalesOrder()->getId();
 
+        if (!$this->canProcess()
+            && (strtotime($this->getSalesOrder()->getCreatedAt())
+                < strtotime($this->dateTime->date(null, '- 1 month')))
+        ) {
+            throw new LocalizedException(
+                __(
+                    'Could not export order due to absence of documents. [Order: %1]',
+                    $this->getSalesOrder()->getIncrementId()
+                )
+            );
+        }
+
+        $orderId = $this->getSalesOrder()->getId();
         foreach ($this->resource->getClientOrders((int) $orderId, $this->getEntityFilter()) as $item) {
             if (!isset($item[Api\Data\OrderExportInterface::ENTITY_TYPE])) {
                 continue;
@@ -234,21 +246,6 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
                     Api\Data\OrderExportInterface::EXTERNAL_ID => $item[Api\Data\OrderExportInterface::EXTERNAL_ID]
                         ?? null
                 ]
-            );
-        }
-
-        if ($this->canProcess()) {
-            return $this;
-        }
-
-        if (strtotime($this->getSalesOrder()->getCreatedAt())
-            < strtotime($this->dateTime->date(null, '- 1 month'))
-        ) {
-            throw new LocalizedException(
-                __(
-                    'Could not export order due to being incomplete over a month. [Order: %1]',
-                    $this->getSalesOrder()->getIncrementId()
-                )
             );
         }
 
@@ -263,9 +260,14 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
     private function process(SalesOrder $order)
     {
         $this->processBefore($order);
+        if (!$this->canProcess()) {
+            return $this;
+        }
+
         foreach ($this->processors as $entityType => $processor) {
             $processor->execute();
         }
+
         $this->processAfter();
         return $this;
     }
