@@ -229,7 +229,7 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
         ) {
             throw new LocalizedException(
                 __(
-                    'Could not export order due to absence of documents. [Order: %1]',
+                    'Could not export order since shipment document is absence. [Order: %1]',
                     $this->getSalesOrder()->getIncrementId()
                 )
             );
@@ -261,6 +261,13 @@ class OrderExport extends OrderExport\AbstractService implements OrderExportInte
     {
         $this->processBefore($order);
         if (!$this->canProcess()) {
+            $this->addResponse(
+                __(
+                    'Could not export order since shipment document is absence. [Order: %1]',
+                    $this->getSalesOrder()->getIncrementId()
+                ),
+                Status::NOTICE
+            );
             return $this;
         }
 
