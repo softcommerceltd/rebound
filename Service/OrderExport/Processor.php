@@ -94,9 +94,7 @@ class Processor extends AbstractService implements ProcessorInterface
                         $entityType,
                         [
                             OrderExportInterface::STATUS => Status::ERROR,
-                            OrderExportInterface::MESSAGE => $e->getMessage(),
-                            OrderExportInterface::REQUEST_ENTRY => $this->serializer
-                                ->serialize($this->getContext()->getRequest())
+                            OrderExportInterface::MESSAGE => $e->getMessage()
                         ]
                     );
             }
