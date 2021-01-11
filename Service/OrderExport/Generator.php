@@ -37,7 +37,7 @@ class Generator extends AbstractService implements ProcessorInterface
     /**
      * @var ImageFactory
      */
-    protected ImageFactory $productImageFactory;
+    private ImageFactory $productImageFactory;
 
     /**
      * Generator constructor.
@@ -148,6 +148,7 @@ class Generator extends AbstractService implements ProcessorInterface
             if (!$product = $this->getProduct($item)) {
                 throw new LocalizedException(__('Could not find product SKU: %1', $item->getSku()));
             }
+
             $request[] = [
                 ClientOrderInterface::SKU_CODE => $item->getSku(),
                 ClientOrderInterface::SKU_DESC => $item->getName(),
@@ -159,7 +160,7 @@ class Generator extends AbstractService implements ProcessorInterface
                 ClientOrderInterface::HEIGHT => $item->getHeight(),
                 ClientOrderInterface::DIMENSIONS_UOM => 'mm',
                 ClientOrderInterface::HS_CODE => $product->getData('commodity_code'),
-                ClientOrderInterface::COUNTRY_CODE => $product->getAttributeText('country_of_manufacture'),
+                ClientOrderInterface::COUNTRY_CODE => $product->getData('country_of_manufacture'),
                 ClientOrderInterface::DANGEROUS_GOODS => 'No',
                 ClientOrderInterface::EXPORT_DATE => $this->dateTime->gmtDate(),
                 ClientOrderInterface::DAYS_FOR_RETURN => 365,

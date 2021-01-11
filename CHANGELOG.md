@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.0.6
+- **Fix**: Added a fix to country of manufacture parameter within item request to use ISO 3166-1 alpha-2 code instead.
+
 ### Version 1.0.5
 - **Improvement**: Added manual order export schedule from within order grid.
 
